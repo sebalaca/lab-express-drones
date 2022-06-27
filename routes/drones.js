@@ -1,4 +1,5 @@
 const express = require('express');
+const { findOneAndRemove } = require('../models/Drone.model');
 const Drone = require('../models/Drone.model');
 const router = express.Router();
 
@@ -8,7 +9,7 @@ router.get('/drones', (req, res, next) => {
   // Iteration #2: List the drones
   Drone.find()
   .then((response) => {
-    console.log(response);
+    console.log(`Este console es para la lista completa`, response);
     res.render("drones/list.hbs", {response});
   })
   .catch((err) => {
@@ -18,12 +19,24 @@ router.get('/drones', (req, res, next) => {
 
 router.get('/drones/create', (req, res, next) => {
   // Iteration #3: Add a new drone
-  // ... your code here
+  res.render("drones/create-form.hbs")
 });
 
 router.post('/drones/create', (req, res, next) => {
   // Iteration #3: Add a new drone
-  // ... your code here
+    console.log(req.body);
+    const name = req.body.name
+    const propellers = req.body.propellers
+    const maxSpeed = req.body.maxSpeed
+    Drone.create({
+      name,
+      propellers,
+      maxSpeed
+    })
+    .then((response)=>{
+      res.redirect("/drones")
+    })
+    .catch((e)=>console.log(e))
 });
 
 router.get('/drones/:id/edit', (req, res, next) => {
