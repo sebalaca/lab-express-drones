@@ -12,8 +12,8 @@ router.get('/drones', (req, res, next) => {
     console.log(`Este console es para la lista completa`, response);
     res.render("drones/list.hbs", {response});
   })
-  .catch((err) => {
-    next(err);
+  .catch((e) => {
+    next(e);
   });
 });
 
@@ -41,12 +41,24 @@ router.post('/drones/create', (req, res, next) => {
 
 router.get('/drones/:id/edit', (req, res, next) => {
   // Iteration #4: Update the drone
-  // ... your code here
+  const {id} = req.params;
+
+  Drone.findById(id)
+  .then(drone => {
+    console.log(droneToEdit);
+    res.render('drones/update-form', drone)
+  })
+  .catch(e => next(e));
 });
 
 router.post('/drones/:id/edit', (req, res, next) => {
   // Iteration #4: Update the drone
-  // ... your code here
+  const { id } = req.params;
+  const { name, propellers, maxSpeed } = req.body
+ 
+  Drone.findByIdAndUpdate(id, { name, propellers, maxSpeed }, { new: true })
+  .then(drone => res.redirect('/drones'))
+  .catch(e => next(e));
 });
 
 router.post('/drones/:id/delete', (req, res, next) => {
